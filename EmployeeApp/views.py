@@ -15,12 +15,12 @@ def departementApi(request, id=0):
         departement_serializer = DepartmentSerializer(departments, many=True)
         return JsonResponse(departement_serializer.data, safe=False)
     elif request.method == 'POST':
-        departement_data = JSONParser().parse(request)
-        departement_serializer = DepartmentSerializer(data=departement_data)
-        if departement_serializer.is_valid():
-            departement_serializer.save
-            return JsonResponse("Added Success", safe=False)
-        return JsonResponse("Failde to Add", safe=False)
+        department_data = JSONParser().parse(request)
+        departments_serializer = DepartmentSerializer(data=department_data)
+        if departments_serializer.is_valid():
+            departments_serializer.save()
+            return JsonResponse("Added Successfully", safe=False)
+        return JsonResponse("Failed to Add", safe=False)
     elif request.method == 'PUT':
         departement_data = JSONParser().parse(request)
         departement = Departments.objects.get(
@@ -34,4 +34,31 @@ def departementApi(request, id=0):
     elif request.method == "DELETE":
         departement = Departments.objects.get(id=id)
         departement.delete()
-        return JsonResponse("delete success", safe=False)
+
+
+@csrf_exempt
+def employeeApi(request, id=0):
+    if request.method == 'GET':
+        employee = Employees.objects.all()
+        employee_serializer = EmployeesSerializer(employee, many=True)
+        return JsonResponse(employee_serializer.data, safe=False)
+    elif request.method == 'POST':
+        employee_data = JSONParser().parse(request)
+        employee_serializer = EmployeesSerializer(data=employee_data)
+        if employee_serializer.is_valid():
+            employee_serializer.save()
+            return JsonResponse("Added Successfully", safe=False)
+        return JsonResponse("Failed to Add", safe=False)
+    elif request.method == 'PUT':
+        employee_data = JSONParser().parse(request)
+        employee = Employees.objects.get(
+            id=employee_data['id'])
+        employee_serializer = EmployeesSerializer(
+            employee, data=employee_data)
+        if employee_serializer.is_valid():
+            employee_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed")
+    elif request.method == "DELETE":
+        employee = Employees.objects.get(id=id)
+        employee.delete()
